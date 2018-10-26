@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -39,6 +41,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     TestingAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swiperefresh);
         // volley
      //   requestQueue = Volley.newRequestQueue(this);
 
@@ -83,10 +89,22 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(adapter);
+        
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(MainActivity.this, "refresh layout", Toast.LENGTH_SHORT).show();
+                doYourUpdate();
+            }
+        });
 
         getData();
 
 
+    }
+
+    private void doYourUpdate() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void getData() {
